@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing View</title>
+    <style>
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: linear-gradient(145deg, #ffffff, #e6e6e6);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1), -5px -5px 15px rgba(255, 255, 255, 0.5);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #0078ff;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .table {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            color: #444;
+        }
+
+        th {
+            background-color: #0078ff;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #0078ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .table {
+            width: 100%;
+            display: flex;
+            justify-content: center; /* Centers the table horizontally */
+        }
+        
+        #billsTable {
+            width: 80%; /* Adjust width to fit better */
+            max-width: 900px; /* Prevents overly wide tables */
+            margin: auto; /* Centers the table inside its parent */
+            border-collapse: collapse;
+        }
+        
+        #billsTable thead th,
+            #billsTable tbody td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+        
+        #billsTable thead th {
+            background-color: #4caf50;
+            color: white;
+            font-size: 18px;
+        }
+        
+        #billsTable tbody tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
+        }
+    </style>    
+</head>
+<body>
+    <div class="container">
+        <h2>Saved Bills</h2>
+        <div class="table">
+            <table id="billsTable">
+                <thead>
+                    <tr>
+                        <th>Customer Name</th>
+                        <th>Mobile</th>
+                        <th>Total Amount</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            async function fetchBills() {
+                const response = await fetch("http://localhost:5000/api/get_bills");
+                const bills = await response.json();
+                const billsTable = document.querySelector("#billsTable tbody");
+                billsTable.innerHTML = "";
+                bills.forEach(bill => {
+                    const createdDateTime = new Date(bill.createdAt);
+                    const formattedTime = createdDateTime.toLocaleTimeString();
+                    billsTable.innerHTML += `
+                        <tr>
+                            <td><a href="bill_detail.html?id=${bill.billId}">${bill.userName}</a></td>
+                            <td>${bill.userContact}</td>
+                            <td>₹${bill.totalPrice}</td>
+                            <td>${createdDateTime.toLocaleDateString()}</td>
+                            <td>${formattedTime}</td>
+                        </tr>`;
+                });
+            }
+            fetchBills();
+        });
+    </script>
+</body>
+</html>

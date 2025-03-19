@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .receipt-container {
+            width: 50%;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            text-align: left;
+        }
+        .header h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .details, .items-list {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .print-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+        }
+        .print-btn:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        <div class="header">
+            <h2>Bill Receipt</h2>
+        </div>
+        
+        <div class="details">
+            <p><strong>Customer Name:</strong> <span id="customerName"></span></p>
+            <p><strong>Mobile:</strong> <span id="customerMobile"></span></p>
+            <p><strong>Total Amount:</strong> ₹<span id="totalAmount"></span></p>
+            <p><strong>Payment Mode:</strong> <span id="paymentMode"></span></p>
+            <p><strong>Date:</strong> <span id="billDate"></span></p>
+            <p><strong>Time:</strong> <span id="billTime"></span></p>
+            
+        </div>
+        
+        <div class="items-list">
+            <p><strong>Items:</strong></p>
+            <ul id="itemsList"></ul>
+        </div>
+        
+        <button class="print-btn" onclick="window.print()">Print Receipt</button>
+        
+        <div class="footer">
+            <p>Thank you for your business!</p>
+        </div>
+    </div>  
+    
+    <script>
+        async function fetchBills() {
+            try {
+                const response = await fetch("http://localhost:5000/api/id");
+                const bills = await response.json();
+                console.log(bills);
+
+                // Extract billId from the URL (if present)
+                const urlParams = new URLSearchParams(window.location.search);
+                const billIdParam = urlParams.get('id');
+                console.log(billIdParam);
+
+                let filteredBills = bills; // Default: show all bills
+
+                if (billIdParam) {
+                    // Filter bills based on billId
+                    filteredBills = bills.filter(bill => bill.billId === parseInt(billIdParam));
+                }
+
+                console.log(filteredBills);
+
+                if (filteredBills.length > 0) {
+                    const bill = filteredBills[0];
+                    document.getElementById("customerName").textContent = bill.userName;
+                    document.getElementById("customerMobile").textContent = bill.userContact;
+                    document.getElementById("totalAmount").textContent = bill.totalPrice;
+                    document.getElementById("paymentMode").textContent = bill.paymentMode;
+                    document.getElementById("billDate").textContent = new Date(bill.createdAt).toLocaleDateString();
+                    document.getElementById("billTime").textContent = new Date(bill.createdAt).toLocaleTimeString();
+            
+                    const itemsList = document.getElementById("itemsList");
+                    itemsList.innerHTML = "";
+                    bill.items.forEach(item => {
+                        const li = document.createElement("li");
+                        li.textContent = `${item.name} - ₹${item.price} x ${item.quantity}`;
+                        itemsList.appendChild(li);
+                    });
+                } else {
+                    document.querySelector(".receipt-container").innerHTML = "<h2>No bill found</h2>";
+                }
+            } catch (error) {
+                console.error("Error fetching bills:", error);
+            }
+        }
+
+        fetchBills();
+    </script>
+</body>
+</html>
