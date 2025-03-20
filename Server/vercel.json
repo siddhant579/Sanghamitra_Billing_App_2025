@@ -14,6 +14,6 @@
   ],
   "env":{
     "DATABASE" : "mongodb+srv://sanghamitra_billing:0Zz1rPiRWeSVeIM7@cluster0.waqi9.mongodb.net/Sanghamitra_billing",  
-    "PORT": 5000
+    "PORT": "5000"
   }
 }
