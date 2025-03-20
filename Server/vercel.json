@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "name": "Sanghamitra.learning",
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "Front/public/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "app.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/Front/public/$1"
+    }
+  ],
+  "env": {
+    "DATABASE": "postgresql://postgres:Siddhant188@db.wociyauemqdioopihmyy.supabase.co:5432/postgres"
+  }
+}
