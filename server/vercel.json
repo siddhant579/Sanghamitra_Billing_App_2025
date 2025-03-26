@@ -13,6 +13,6 @@
     }
   ],
   "env": {
-    "DATABASE": "mongodb+srv://siddhant:siddhant188@cluster0.l5igj.mongodb.net/Sanghamitra_Billing"
+    "DATABASE": "mongodb+srv://siddhant:siddhant188@cluster0.l5igj.mongodb.net/Sanghamitra_Billing?retryWrites=true&w=majority&connectTimeoutMS=60000"
   }
 }
