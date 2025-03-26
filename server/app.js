@@ -17,6 +17,10 @@ mongoose.connect(process.env.DATABASE, {
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.error('DB Connection Error:', err));
 
+app.get('/', (req, res) => {
+    res.send('🚀 Server is Running! Welcome to Sanghamitra Billing API.');
+});
+
 // Routes
 app.use('/api', require('./route/auth'));
 
