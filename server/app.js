@@ -13,9 +13,12 @@ app.use(express.json());
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 60000, // Increase timeout
+    socketTimeoutMS: 60000, // Prevent early disconnection
+    keepAlive: true, // Keep connection alive
 })
 .then(() => console.log('MongoDB Connected'))
-.catch(err => console.log('DB Connection Error:', err));
+.catch(err => console.error('DB Connection Error:', err));
 
 // Routes
 app.use('/api', require('./route/auth'));
