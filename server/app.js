@@ -11,11 +11,8 @@ app.use(express.json());
 
 // Database Connection
 mongoose.connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 60000, // Increase timeout
-    socketTimeoutMS: 60000, // Prevent early disconnection
-    keepAlive: true, // Keep connection alive
+    dbName: 'Sanghamitra_Billing',  // Explicitly set the database name
+    serverSelectionTimeoutMS: 5000, // Shorten timeout for faster error feedback
 })
 .then(() => console.log('MongoDB Connected'))
 .catch(err => console.error('DB Connection Error:', err));
