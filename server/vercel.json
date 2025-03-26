@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "app.js"
+    }
+  ],
+  "env": {
+    "DATABASE": "mongodb+srv://siddhant:siddhant188@cluster0.l5igj.mongodb.net/Sanghamitra_Billing"
+  }
+}
