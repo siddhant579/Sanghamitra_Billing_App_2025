@@ -86,7 +86,7 @@
     <script>
         async function fetchBills() {
             try {
-                const response = await fetch("http://localhost:5000/api/id");
+                const response = await fetch("https://sanghamitra-billing-app-2025-server.vercel.app/api/get_bills");
                 const bills = await response.json();
                 console.log(bills);
 
