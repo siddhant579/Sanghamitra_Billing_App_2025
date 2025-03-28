@@ -127,7 +127,7 @@
                     const formattedTime = createdDateTime.toLocaleTimeString();
                     billsTable.innerHTML += `
                         <tr>
-                            <td><a href="bill_detail.html?id=${bill.billId}">${bill.userName}</a></td>
+                            <td><a href="bill_details.html?id=${bill._id}">${bill.userName}</a></td>
                             <td>${bill.userContact}</td>
                             <td>₹${bill.totalPrice}</td>
                             <td>${createdDateTime.toLocaleDateString()}</td>
