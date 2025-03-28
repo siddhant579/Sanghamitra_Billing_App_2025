@@ -53,11 +53,6 @@
         .print-btn:hover {
             background-color: #218838;
         }
-        @media print {
-            .print-btn {
-                display: none;
-            }
-        }
     </style>
 </head>
 <body>
@@ -73,6 +68,7 @@
             <p><strong>Payment Mode:</strong> <span id="paymentMode"></span></p>
             <p><strong>Date:</strong> <span id="billDate"></span></p>
             <p><strong>Time:</strong> <span id="billTime"></span></p>
+            
         </div>
         
         <div class="items-list">
@@ -91,47 +87,43 @@
         async function fetchBills() {
             try {
                 const response = await fetch("http://localhost:5000/api/id");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch bills");
-                }
                 const bills = await response.json();
+                console.log(bills);
 
+                // Extract billId from the URL (if present)
                 const urlParams = new URLSearchParams(window.location.search);
-                const billIdParam = Number(urlParams.get("id")) || null;
+                const billIdParam = urlParams.get('id');
+                console.log(billIdParam);
 
-                let filteredBills = bills;
+                let filteredBills = bills; // Default: show all bills
 
                 if (billIdParam) {
-                    filteredBills = bills.filter(bill => bill.billId === billIdParam);
+                    // Filter bills based on billId
+                    filteredBills = bills.filter(bill => bill.billId === parseInt(billIdParam));
                 }
+
+                console.log(filteredBills);
 
                 if (filteredBills.length > 0) {
                     const bill = filteredBills[0];
-
-                    document.getElementById("customerName").textContent = bill.userName || "N/A";
-                    document.getElementById("customerMobile").textContent = bill.userContact || "N/A";
-                    document.getElementById("totalAmount").textContent = bill.totalPrice || "0";
-                    document.getElementById("paymentMode").textContent = bill.paymentMode || "Unknown";
-                    document.getElementById("billDate").textContent = bill.createdAt ? new Date(bill.createdAt).toLocaleDateString() : "N/A";
-                    document.getElementById("billTime").textContent = bill.createdAt ? new Date(bill.createdAt).toLocaleTimeString() : "N/A";
-
+                    document.getElementById("customerName").textContent = bill.userName;
+                    document.getElementById("customerMobile").textContent = bill.userContact;
+                    document.getElementById("totalAmount").textContent = bill.totalPrice;
+                    document.getElementById("paymentMode").textContent = bill.paymentMode;
+                    document.getElementById("billDate").textContent = new Date(bill.createdAt).toLocaleDateString();
+                    document.getElementById("billTime").textContent = new Date(bill.createdAt).toLocaleTimeString();
+            
                     const itemsList = document.getElementById("itemsList");
                     itemsList.innerHTML = "";
-
-                    if (bill.items && bill.items.length > 0) {
-                        bill.items.forEach(item => {
-                            const li = document.createElement("li");
-                            li.textContent = `${item.name} - ₹${item.price} x ${item.quantity}`;
-                            itemsList.appendChild(li);
-                        });
-                    } else {
-                        itemsList.innerHTML = "<li>No items purchased</li>";
-                    }
+                    bill.items.forEach(item => {
+                        const li = document.createElement("li");
+                        li.textContent = ${item.name} - ₹${item.price} x ${item.quantity};
+                        itemsList.appendChild(li);
+                    });
                 } else {
                     document.querySelector(".receipt-container").innerHTML = "<h2>No bill found</h2>";
                 }
             } catch (error) {
-                document.querySelector(".receipt-container").innerHTML = `<h2>Error loading receipt</h2><p>${error.message}</p>`;
                 console.error("Error fetching bills:", error);
             }
         }
