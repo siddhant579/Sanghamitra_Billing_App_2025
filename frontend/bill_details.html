@@ -3,64 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Details</title>
+    <title>Sanghamitra Bill</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
             margin: 0;
+            padding: 0;
         }
         .receipt-container {
-            width: 50%;
-            background: #fff;
+            width: 75%;
+            margin: 20px auto;
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            text-align: left;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header img {
+            width: 80px;
+            height: auto;
         }
         .header h2 {
-            text-align: center;
-            margin-bottom: 10px;
+            flex-grow: 1;
             font-size: 24px;
+            color: #333;
+            text-align: center;
+        }
+        .header div {
+            flex-basis: 50px;
         }
         .details, .items-list {
+            margin-top: 20px;
             font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 10px;
+            color: #333;
+            text-align: left;
+        }
+        .details p, .items-list p {
+            margin: 8px 0;
+        }
+        .items-list table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .items-list th, .items-list td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .items-list th {
+            background-color: #f1f1f1;
+            font-weight: bold;
         }
         .footer {
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 14px;
+            color: #777;
             text-align: center;
         }
         .print-btn {
-            display: block;
             width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            background-color: #28a745;
+            padding: 15px;
+            background-color: #4CAF50;
             color: white;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-align: center;
-            font-size: 16px;
+            margin-top: 20px;
         }
         .print-btn:hover {
-            background-color: #218838;
+            background-color: #45a049;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            .receipt-container {
+                width: 100% !important;
+                box-shadow: none !important;
+                padding: 10px;
+            }
+            .header img {
+                display: block;
+            }
+            .header h2 {
+                font-size: 28px;
+            }
+            .footer {
+                display: none;
+            }
+            .print-btn {
+                display: none;
+            }
+            .items-list table {
+                width: 100%;
+                font-size: 18px;
+            }
+            .items-list th, .items-list td {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="receipt-container">
         <div class="header">
-            <h2>Bill Details</h2>
+            <img src="./img/Sanghamitra_logo.jpg" alt="Logo">
+            <h2>Sanghamitra Bill Details</h2>
+            <div></div>
         </div>
-        
+
         <div class="details">
             <p><strong>Customer Name:</strong> <span id="customerName"></span></p>
             <p><strong>Mobile:</strong> <span id="customerMobile"></span></p>
@@ -69,16 +133,26 @@
             <p><strong>Date:</strong> <span id="billDate"></span></p>
             <p><strong>Time:</strong> <span id="billTime"></span></p>
         </div>
-        
+
         <div class="items-list">
             <p><strong>Items:</strong></p>
-            <ul id="itemsList"></ul>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsList"></tbody>
+            </table>
         </div>
 
         <button class="print-btn" onclick="window.print()">Print Receipt</button>
 
         <div class="footer">
-            <p>Thank you for your business!</p>
+            <p>Thank you for shopping with us! Visit again.</p>
         </div>
     </div>
 
@@ -120,9 +194,14 @@
             const itemsList = document.getElementById("itemsList");
             itemsList.innerHTML = "";
             bill.products.forEach(product => {
-                const li = document.createElement("li");
-                li.textContent = `${product.productName} - ₹${product.price} x ${product.quantity}`;
-                itemsList.appendChild(li);
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${product.productName}</td>
+                    <td>₹${product.price}</td>
+                    <td>${product.quantity}</td>
+                    <td>₹${product.price * product.quantity}</td>
+                `;
+                itemsList.appendChild(tr);
             });
         }
 
