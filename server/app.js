@@ -26,6 +26,8 @@ app.get('/', (req, res) => {
 // Routes
 app.use('/api', require('./route/auth'));
 
-// Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
+// Export for Vercelss
+module.exports = app;
+
+
